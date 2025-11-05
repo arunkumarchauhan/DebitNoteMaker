@@ -1,8 +1,8 @@
 from fastapi import APIRouter,Request,Depends
 from fastapi.templating import Jinja2Templates
-from db.repository import company as company_repository
 from api.v1 import company_router as company_api
 from db.session import get_db
+from schemas.bill import BillShow
 templates = Jinja2Templates(directory="template")
 
 
@@ -17,8 +17,10 @@ def home(request: Request, db=Depends(get_db)):
 @router.get("/{company_id}")
 def company_detail(request: Request,company_id:int, db=Depends(get_db)):
     company =company_api.get_company(id=company_id, db=db)
-    bills = company.bills
-    context = {"request": request,"company":company,"bills":bills}
+    bills = [
+        BillShow.model_validate(bill).model_dump()
+        for bill in company.bills
+    ]
+    context = {"request": request,"company":company,"bills":company.bills}
     return templates.TemplateResponse("company/company_detail.html",context)
-
 

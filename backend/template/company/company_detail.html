@@ -9,11 +9,21 @@
       </script>
   <script>
     $(document).ready(function(){
+        $('.datepicker').hide();
         $('.datepicker').datepicker({
             format: 'dd/mm/yyyy',
             autoclose: true
         });
+        $('#dateSwitch').on('click', function() {
+            if ($('.datepicker').is(':visible')) {
+            $('.datepicker').hide(); // Hide the component
+    } else {
+      $('.datepicker').show(); // Show the component
+    }
+       
+  });
     });
+    
 </script>
 {% endblock %}
 {% block content %}
@@ -24,7 +34,10 @@
     <div class="col-12 col-lg-6 d-flex">
         {% include 'components/bill_filter_card.html' %}
     </div>
-</div>
+   
+   
 
+</div>
+{% include 'components/bill_list_table.html' %}
 
 {% endblock %}

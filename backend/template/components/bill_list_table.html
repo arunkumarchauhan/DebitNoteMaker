@@ -1,0 +1,28 @@
+<div class="table-responsive">
+   {% if bills %}
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr >
+                <th>Bill Number</th>
+                <th>Bill Date</th>
+                <th>Amount</th>
+                <th>Due date</th>
+                <th>Delayed Days</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bill in bills %}
+            <tr>
+                <td>{{ bill.bill_number }}</td>
+                <td>{{ bill.bill_date }}</td>
+                <td>{{ bill.amount }}</td>
+                <td>{{ bill.due_date }}</td>
+                <td>{{ bill.delayed_days }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No bills available.</p>
+   {% endif %}
+</div>
