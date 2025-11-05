@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Debit Note Maker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src=
+  "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js">
+      </script>
+  <script>
+    $(document).ready(function(){
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true
+        });
+    });
+</script>
+{% endblock %}
+{% block content %}
+<div class="row m-3 g-3 align-items-stretch">
+    <div class="col-12 col-lg-6 d-flex">
+        {% include 'components/company_summary_card.html' %}
+    </div>
+    <div class="col-12 col-lg-6 d-flex">
+        {% include 'components/bill_filter_card.html' %}
+    </div>
+</div>
+
+
+{% endblock %}

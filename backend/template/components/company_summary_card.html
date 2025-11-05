@@ -1,0 +1,17 @@
+<div class="card flex-fill h-100 w-100" style="flex: 1 1 0; min-width: 0;">
+    <div class="card-header">
+   
+       <h4 class="card-text">{{company.name}}</h4>
+   </div>
+     <div class="justify-content-center card-body">
+   
+       <p class="card-text">Email: {{ company.email}}</p>
+       <p class="card-text">Phone: {{ company.phone_number}}</p>
+       <p class="card-text">GST : {{ company.gst_number }}</p>
+       <p class="card-text">Payment Term : {{ company.payment_term_days}} days</p>
+       {% if company.address %}
+       <small class="card-text text-muted">Address : {{ company.address }}</small>
+       {% endif %}
+     </div>
+   
+   </div>

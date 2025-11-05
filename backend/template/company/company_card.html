@@ -1,0 +1,26 @@
+<div class="col-sm-4 mb-4">
+   
+    <div class="card">
+       <div class="card-header">
+        <h5 class="card-text">{{ company.name }}
+
+            <a href="home/{{company.id}}" class="float-end btn btn-outline-primary">  
+                <!-- <button type="button" class="btn btn-outline-primary">Edit</button> -->
+                View
+                <!-- <i class="btn btn-outline-primary">Edit</i> -->
+            </a>
+        </h5>
+
+       </div>
+        <div class="card-body d-flex flex-column">
+            <p class="card-text">Email: {{ company.email}}</p>
+            <p class="card-text">Phone: {{ company.phone_number}}</p>
+            <p class="card-text">GST : {{ company.gst_number }}</p>
+            <p class="card-text">Payment Term : {{ company.payment_term_days}} days</p>
+            {% if company.address %}
+            <small class="card-text text-muted">Address : {{ company.address | truncate(50)}}</small>
+            {% endif %}
+   
+    </div>
+        </div>
+</div>

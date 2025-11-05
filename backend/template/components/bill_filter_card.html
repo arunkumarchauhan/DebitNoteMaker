@@ -1,0 +1,41 @@
+<div class="card flex-fill h-100 w-100" style="flex: 1 1 0; min-width: 0;">
+        <div class="card-header">
+        
+            <h4 class="card-text">Filters</h4>
+        </div>
+           
+        <div class="card-body">
+            <div class="row">
+                <div class="card-text mb-2">
+                    Date Range : Forever 
+                    {% if start_date %}
+                   {{ start_date }} to {{ end_date }}
+                   {% endif %}
+                   <input type="text" class="datepicker" style="width:auto;" id="startDate" placeholder="Start Date">
+                    <input type="text" class="datepicker" style="width:auto;" id="endDate"  placeholder="End Date">
+               
+                </div>
+                <div class="card-text">
+                    <div class="row align-items-top">
+                        <div class="col-auto">
+                          <label for="mySwitch" class="me-2">Custom Date Range :</label>
+                        </div>
+                        <div class="col-auto">
+                            <div class="form-check form-switch">
+                              <input class="form-check-input"  type="checkbox" id="mySwitch"     style="width:50px;height:20px">
+                            </div>
+                          </div>
+                        
+                      </div>
+                      <div class="col-auto mt-2" style="display: flex;">
+                        <label for="quantity" class="form-label me-2" >Min. Amount :</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" min="0" step="100" style="width:auto;height:35px">
+                      </div>
+                </div>
+               
+            </div>
+            <div class="mt-3">
+                <button class="btn btn-primary" id="applyFiltersBtn">Apply Filters</button>
+        </div>
+    
+    </div>
