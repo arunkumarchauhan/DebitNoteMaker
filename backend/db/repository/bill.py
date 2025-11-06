@@ -4,7 +4,6 @@ from db.models.bill import Bill
 from schemas.bill import BillCreate,BillUpdate,BillShow
 from sqlalchemy.orm import selectinload
 
-
 def create_new_bill(bill:BillCreate,db:Session):
     existing_bill=get_bill_by_bill_number(bill_number=bill.bill_number,db=db)
     if existing_bill:

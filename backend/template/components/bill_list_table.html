@@ -7,7 +7,6 @@
                 <th>Bill Date</th>
                 <th>Due date</th>
                 <th>Bill Amount</th>
-                <th>Delayed Days</th>
                 <th>Transactions</th>
             </tr>
         </thead>
@@ -19,7 +18,7 @@
                 <td>{{ bill.bill_date | format_datetime('%d-%m-%Y') }}</td>
                 <td>{{ bill.due_date | format_datetime('%d-%m-%Y') }}</td>
                 <td>{{ bill.amount }}</td>
-                <td>{{ bill.delayed_days }}</td>
+          
                 <td><a href="bill/{{bill.bill_number}}" class="btn btn-outline-primary btn-sm" role="button" aria-disabled="true">View</a>
                 </td>
             </tr>

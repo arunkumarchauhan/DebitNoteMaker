@@ -44,13 +44,32 @@
                     </span>
                 </div>
                 <div class="col-md-3">
-                    <small class="text-muted text-uppercase d-block">Amount</small>
+                    <small class="text-muted text-uppercase d-block">Bill Amount</small>
                     <span class="fw-semibold fs-5">&#8377; {{ "%.2f"|format(bill.amount) }}</span>
                 </div>
+                {% if not transaction_list%}
+                {%set delayed_days=( today-bill.due_date).days %}
+                {% if delayed_days < 0 %}
+                {%set delayed_days=0 %}
+                {% endif %}
+                {%set penalty_amt=bill.amount*0.02/30*delayed_days %}    
                 <div class="col-md-3">
                     <small class="text-muted text-uppercase d-block">Delayed Days</small>
-                    <span class="fw-semibold">{{ bill.delayed_days if bill.delayed_days is not none else 0 }}</span>
+                    <span class="fw-semibold fs-5">&#8377; {{  delayed_days}}</span>
                 </div>
+                <div class="col-md-3">
+                    <small class="text-muted text-uppercase d-block">Penalty Amount(2% P.M.)</small>
+                   
+
+                    <span class="fw-semibold fs-5">&#8377; {{ "%.2f"|format(penalty_amt) }}</span>
+                </div>
+
+                <div class="col-md-3">
+                    <small class="text-muted text-uppercase d-block">Total Amount</small>
+
+                    <span class="fw-semibold fs-5">&#8377; {{ "%.2f"|format(penalty_amt+ bill.amount) }}</span>
+                </div>
+                {%endif%}
             </div>
             {% else %}
             <p class="mb-0 text-muted">Bill information is not available.</p>
@@ -73,11 +92,18 @@
                             <th scope="col">Payment Mode</th>
                             <th scope="col">Amount Paid</th>
                             <th scope="col">Payment Date</th>
+                            <th scope="col">Delayed Days</th>
                             <th scope="col">Description</th>
+                            <th scope="col">Pending Amount</th>
+                            <th scope="col">Penalty Amount (2%P.M.)</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% set ns = namespace(pending_amount=bill.amount,penalty=0) %}
+
+
                         {% for transaction in transaction_list %}
+                        {% set ns.pending_amount=ns.pending_amount-transaction.amount_paid %}
                         <tr>
                             <td>{{ transaction.bank_transaction_id or "—" }}</td>
                             <td>{{ transaction.payment_mode }}</td>
@@ -89,14 +115,65 @@
                                     &mdash;
                                 {% endif %}
                             </td>
+                            <td>{% set delayed_days=
+                               ( transaction.payment_date - bill.due_date).days 
+                                %}
+                            {%  if delayed_days > 0 %}
+                        
+                            {{ delayed_days }}
+                            {% else %}
+                            {% set delayed_days=0%}
+                            {{ 0 }}
+                            {% endif %}
+                            </td>
                             <td>{{ transaction.description or "—" }}</td>
+                            <td> {{ ns.pending_amount }} </td>
+
+                            <td>
+                                {% set penalty=  transaction.amount_paid*0.02*delayed_days/30%}
+                                {% set ns.penalty=ns.penalty+penalty %}
+                                {{penalty}}
+                            </td>
                         </tr>
+                    
                         {% endfor %}
+                        {%if ns.pending_amount>0%}
+                        <tr>    
+                            <td > - </td>
+                            <td > - </td>
+                            <td > - </td>
+                            <td > - </td>
+                            <td >
+                                {% set pending_amt_delayed_days=(today-bill.due_date).days %}
+                                {% if pending_amt_delayed_days > 0 %}
+                                    {{ pending_amt_delayed_days }}
+                                {% else %}
+                                    {% set pending_amt_delayed_days = 0 %}
+                                    0
+                                {% endif %}
+                                </td>
+                            <td >_</td>
+                            <td >{{ns.pending_amount}}</td>
+                            <td >
+                                {%set penalty=ns.pending_amount*0.02*pending_amt_delayed_days/30 %}
+                                {% set ns.penalty=ns.penalty + penalty %}
+                                {{penalty}} 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="text-end fw-bold">Total : </td>
+                            <td colspan="1" class="fw-bold">&#8377; {{ "%.2f"|format(ns.pending_amount + ns.penalty ) }} = </td>
+                            <td colspan="1" class="fw-bold">&#8377; {{ "%.2f"|format(ns.pending_amount ) }} + </td>
+                            <td colspan="1" class="fw-bold">&#8377; {{ "%.2f"|format(ns.penalty ) }}</td>
+                        
+                        </tr>
+                        {%endif%}
                     </tbody>
                 </table>
             </div>
             {% else %}
             <p class="mb-0 text-muted">No transactions recorded for this bill.</p>
+
             {% endif %}
         </div>
     </div>

@@ -16,14 +16,6 @@ class Bill(Base):
         if self.bill_date and self.company:
             return self.bill_date + timedelta(days=self.company.payment_term_days)
         return None
-    @property
-    def delayed_days(self):
-        due = self.due_date
-        if due:
-            delta = (datetime.now() - due).days
-            return max(delta, 0)
-        return None
-    
 
 
     

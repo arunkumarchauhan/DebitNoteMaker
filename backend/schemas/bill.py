@@ -21,7 +21,7 @@ class BillUpdate(BaseModel):
 class BillShow(BillCreate):
     id:int
     due_date: datetime | None = None
-    delayed_days: int | None = None
+    # delayed_days: int | None = None
     model_config = ConfigDict(from_attributes=True)
     
 
