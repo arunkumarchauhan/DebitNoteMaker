@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Bill {{ bill.bill_number if bill is defined else "" }} Summary</title>
+{% endblock %}
+
+{% block content %}
+{% set transaction_list = [] %}
+{% if transactions is defined %}
+    {% set transaction_list = transactions %}
+{% elif bill is defined and bill.transactions is defined %}
+    {% set transaction_list = bill.transactions %}
+{% endif %}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Bill Summary</h2>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">Back</a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Bill Details</h5>
+        </div>
+        <div class="card-body">
+            {% if bill is defined %}
+            <div class="row gy-3">
+                <div class="col-md-3">
+                    <small class="text-muted text-uppercase d-block">Bill Number</small>
+                    <span class="fw-semibold fs-5">{{ bill.bill_number }}</span>
+                </div>
+                <div class="col-md-3">
+                    <small class="text-muted text-uppercase d-block">Bill Date</small>
+                    <span class="fw-semibold">{{ bill.bill_date | format_datetime('%d-%m-%Y') }}</span>
+                </div>
+                <div class="col-md-3">
+                    <small class="text-muted text-uppercase d-block">Due Date</small>
+                    <span class="fw-semibold">
+                        {% if bill.due_date %}
+                            {{ bill.due_date | format_datetime('%d-%m-%Y') }}
+                        {% else %}
+                            &mdash;
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="col-md-3">
+                    <small class="text-muted text-uppercase d-block">Amount</small>
+                    <span class="fw-semibold fs-5">&#8377; {{ "%.2f"|format(bill.amount) }}</span>
+                </div>
+                <div class="col-md-3">
+                    <small class="text-muted text-uppercase d-block">Delayed Days</small>
+                    <span class="fw-semibold">{{ bill.delayed_days if bill.delayed_days is not none else 0 }}</span>
+                </div>
+            </div>
+            {% else %}
+            <p class="mb-0 text-muted">Bill information is not available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Transactions</h5>
+            <span class="badge text-bg-secondary">{{ transaction_list|length }}</span>
+        </div>
+        <div class="card-body">
+            {% if transaction_list %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Transaction ID</th>
+                            <th scope="col">Payment Mode</th>
+                            <th scope="col">Amount Paid</th>
+                            <th scope="col">Payment Date</th>
+                            <th scope="col">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transaction in transaction_list %}
+                        <tr>
+                            <td>{{ transaction.bank_transaction_id or "—" }}</td>
+                            <td>{{ transaction.payment_mode }}</td>
+                            <td>&#8377; {{ "%.2f"|format(transaction.amount_paid) }}</td>
+                            <td>
+                                {% if transaction.payment_date %}
+                                    {{ transaction.payment_date | format_datetime('%d-%m-%Y') }}
+                                {% else %}
+                                    &mdash;
+                                {% endif %}
+                            </td>
+                            <td>{{ transaction.description or "—" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="mb-0 text-muted">No transactions recorded for this bill.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
