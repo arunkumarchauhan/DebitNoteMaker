@@ -12,7 +12,13 @@
         <div>
             <h2 class="mb-1">{{ company.name }}</h2>
             <p class="text-muted mb-0">
-                GST: {{ company.gst_number or "&mdash;" }} &middot; Payment Term: {{ company.payment_term_days }} days
+                GST:
+                {% if company.gst_number %}
+                    {{ company.gst_number }}
+                {% else %}
+                    &mdash;
+                {% endif %}
+                &middot; Payment Term: {{ company.payment_term_days }} days
             </p>
         </div>
         <div class="mt-3 mt-md-0">
@@ -30,15 +36,33 @@
                     <div class="row gy-2">
                         <div class="col-sm-6">
                             <small class="text-muted text-uppercase d-block">Email</small>
-                            <span class="fw-semibold">{{ company.email or "&mdash;" }}</span>
+                            <span class="fw-semibold">
+                                {% if company.email %}
+                                    {{ company.email }}
+                                {% else %}
+                                    &mdash;
+                                {% endif %}
+                            </span>
                         </div>
                         <div class="col-sm-6">
                             <small class="text-muted text-uppercase d-block">Phone</small>
-                            <span class="fw-semibold">{{ company.phone_number or "&mdash;" }}</span>
+                            <span class="fw-semibold">
+                                {% if company.phone_number %}
+                                    {{ company.phone_number }}
+                                {% else %}
+                                    &mdash;
+                                {% endif %}
+                            </span>
                         </div>
                         <div class="col-sm-6">
                             <small class="text-muted text-uppercase d-block">GST Number</small>
-                            <span class="fw-semibold">{{ company.gst_number or "&mdash;" }}</span>
+                            <span class="fw-semibold">
+                                {% if company.gst_number %}
+                                    {{ company.gst_number }}
+                                {% else %}
+                                    &mdash;
+                                {% endif %}
+                            </span>
                         </div>
                         <div class="col-sm-6">
                             <small class="text-muted text-uppercase d-block">Payment Term</small>
@@ -112,8 +136,20 @@
                         {% for txn in transactions %}
                         <tr>
                             <td>{{ txn.bill_id }}</td>
-                            <td>{{ txn.transaction_id or "&mdash;" }}</td>
-                            <td>{{ txn.payment_mode or "&mdash;" }}</td>
+                            <td>
+                                {% if txn.transaction_id %}
+                                    {{ txn.transaction_id }}
+                                {% else %}
+                                    &mdash;
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if txn.payment_mode %}
+                                    {{ txn.payment_mode }}
+                                {% else %}
+                                    &mdash;
+                                {% endif %}
+                            </td>
                             <td>
                                 {% if txn.bill_amount is not none %}
                                     &#8377; {{ "%.2f"|format(txn.bill_amount) }}
@@ -132,7 +168,13 @@
                             </td>
                             <td>{{ txn.delayed_days }}</td>
                             <td class="text-danger">&#8377; {{ "%.2f"|format(txn.penalty) }}</td>
-                            <td>{{ txn.description or "&mdash;" }}</td>
+                            <td>
+                                {% if txn.description %}
+                                    {{ txn.description }}
+                                {% else %}
+                                    &mdash;
+                                {% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
