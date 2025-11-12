@@ -182,8 +182,8 @@
                                 </button> 
                                 <button type="button" class="btn btn-sm btn-outline-primary edit-transaction-btn"
                                     data-bs-toggle="modal"  
-                                    data-id="{{ txn.id }}"
-                                    onclick="showConfirmation()"
+                                 
+                                    onclick="showConfirmation('{{ txn.id }}')"
                                     >
                                     Delete </button>
                                 {% else %}
@@ -202,15 +202,32 @@
     </div>
 </div>
 <script>
-    function showConfirmation() {
-        if (confirm("Are you sure you want to delete this item?")) {
+    function showConfirmation(txnId) {
+        if (confirm(`Are you sure you want to delete transaction with id:  ${txnId} ?`)) {
             // User clicked "OK"
-            alert("Item deleted!");
+           // alert("Item deleted!");
+           
+            const actionUrl = '/transaction/' + txnId;
+
+            fetch(actionUrl, {
+                method: "DELETE",
+                headers: {
+                    'Content-Type': 'application/json', // Or 'application/x-www-form-urlencoded'
+                    // Add any necessary headers, e.g., X-CSRF-TOKEN
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    alert("Transaction deleted successfully.");
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    // Handle errors
+                });
             // Here you would typically perform the action, e.g., submit a form or make an API call
-        } else {
-            // User clicked "Cancel"
-            alert("Deletion cancelled.");
-        }
+        } 
     }
 </script>
 <div class="modal fade" id="editTransactionModal" tabindex="-1" aria-hidden="true">
