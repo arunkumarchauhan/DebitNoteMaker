@@ -61,7 +61,7 @@ def create_transaction(bill:Bill,roi:float):
                                 payment_mode=None,
                                 due_date=bill.due_date,
                                 payment_date=datetime.now(),
-                                bill_amount=bill.amount, 
+                                bill_amount=bill.amount if pending_amount== bill.amount else None,
                                 amount_paid=0.0,
                                 pending_amount=pending_amount,
                                 description="No payment made yet")    

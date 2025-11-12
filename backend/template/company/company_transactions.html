@@ -133,6 +133,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        
                         {% for txn in transactions %}
                         <tr>
                             <td>{{ txn.bill_id }}</td>
@@ -153,11 +154,17 @@
                             <td>
                                 {% if txn.bill_amount is not none %}
                                     &#8377; {{ "%.2f"|format(txn.bill_amount) }}
-                                {% else %}
+                                
+                                    {% else %}
                                     &mdash;
                                 {% endif %}
                             </td>
-                            <td>&#8377; {{ "%.2f"|format(txn.amount_paid) }}</td>
+                            <td>
+                                {% if txn.amount_paid==0%}
+                                &mdash;
+                                {% else %}
+                                &#8377;   {{ "%.2f"|format(txn.amount_paid) }}</td>
+                                {% endif %}
                             <td>&#8377; {{ "%.2f"|format(txn.pending_amount) }}</td>
                             <td>
                                 {% if txn.payment_date %}
