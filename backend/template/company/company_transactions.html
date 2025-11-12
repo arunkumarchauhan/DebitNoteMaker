@@ -140,37 +140,32 @@
                             <td>
                                 {% if txn.transaction_id %}
                                     {{ txn.transaction_id }}
-                                {% else %}
-                                    &mdash;
+                            
                                 {% endif %}
                             </td>
                             <td>
                                 {% if txn.payment_mode %}
                                     {{ txn.payment_mode }}
-                                {% else %}
-                                    &mdash;
+                               
                                 {% endif %}
                             </td>
                             <td>
                                 {% if txn.bill_amount is not none %}
                                     &#8377; {{ "%.2f"|format(txn.bill_amount) }}
                                 
-                                    {% else %}
-                                    &mdash;
+                                 
                                 {% endif %}
                             </td>
                             <td>
-                                {% if txn.amount_paid==0%}
-                                &mdash;
-                                {% else %}
+                                {% if txn.amount_paid!=0%}
+                                
                                 &#8377;   {{ "%.2f"|format(txn.amount_paid) }}</td>
                                 {% endif %}
                             <td>&#8377; {{ "%.2f"|format(txn.pending_amount) }}</td>
                             <td>
                                 {% if txn.payment_date %}
                                     {{ txn.payment_date | format_datetime('%d-%m-%Y') }}
-                                {% else %}
-                                    &mdash;
+                               
                                 {% endif %}
                             </td>
                             <td>{{ txn.delayed_days }}</td>
@@ -178,8 +173,7 @@
                             <td>
                                 {% if txn.description %}
                                     {{ txn.description }}
-                                {% else %}
-                                    &mdash;
+                               
                                 {% endif %}
                             </td>
                         </tr>
