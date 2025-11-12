@@ -6,6 +6,7 @@
 
 {% block content %}
 {% set transactions = bill.transactions if bill and bill.transactions is defined else [] %}
+{% set mdash = "&mdash;"|safe %}
 
 <div class="container py-4">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
@@ -14,9 +15,9 @@
             <p class="text-muted mb-0">
                 GST:
                 {% if company.gst_number %}
-                    {{ company.gst_number }}
+                {{ company.gst_number }}
                 {% else %}
-                    &mdash;
+                &mdash;
                 {% endif %}
                 &middot; Payment Term: {{ company.payment_term_days }} days
             </p>
@@ -38,9 +39,9 @@
                             <small class="text-muted text-uppercase d-block">Email</small>
                             <span class="fw-semibold">
                                 {% if company.email %}
-                                    {{ company.email }}
+                                {{ company.email }}
                                 {% else %}
-                                    &mdash;
+                                &mdash;
                                 {% endif %}
                             </span>
                         </div>
@@ -48,9 +49,9 @@
                             <small class="text-muted text-uppercase d-block">Phone</small>
                             <span class="fw-semibold">
                                 {% if company.phone_number %}
-                                    {{ company.phone_number }}
+                                {{ company.phone_number }}
                                 {% else %}
-                                    &mdash;
+                                &mdash;
                                 {% endif %}
                             </span>
                         </div>
@@ -58,9 +59,9 @@
                             <small class="text-muted text-uppercase d-block">GST Number</small>
                             <span class="fw-semibold">
                                 {% if company.gst_number %}
-                                    {{ company.gst_number }}
+                                {{ company.gst_number }}
                                 {% else %}
-                                    &mdash;
+                                &mdash;
                                 {% endif %}
                             </span>
                         </div>
@@ -93,11 +94,13 @@
                         </div>
                         <div class="col-sm-6">
                             <small class="text-muted text-uppercase d-block">Pending Amount</small>
-                            <span class="fw-semibold fs-5 text-warning">&#8377; {{ "%.2f"|format(bill.pending_amount) }}</span>
+                            <span class="fw-semibold fs-5 text-warning">&#8377; {{ "%.2f"|format(bill.pending_amount)
+                                }}</span>
                         </div>
                         <div class="col-sm-6">
                             <small class="text-muted text-uppercase d-block">Total Penalty</small>
-                            <span class="fw-semibold fs-5 text-danger">&#8377; {{ "%.2f"|format(bill.total_penalty) }}</span>
+                            <span class="fw-semibold fs-5 text-danger">&#8377; {{ "%.2f"|format(bill.total_penalty)
+                                }}</span>
                         </div>
                         <div class="col-sm-6">
                             <small class="text-muted text-uppercase d-block">Interest Rate</small>
@@ -129,54 +132,49 @@
                             <th scope="col">Payment Date</th>
                             <th scope="col">Delayed Days</th>
                             <th scope="col">Penalty</th>
-                            <th scope="col">Edit</th>
 
-                      
+                            <th scope="col" class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        
                         {% for txn in transactions %}
                         <tr>
                             <td>{{ txn.bill_id }}</td>
-                            <td>
-                                {% if txn.transaction_id %}
-                                    {{ txn.transaction_id }}
-                            
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if txn.payment_mode %}
-                                    {{ txn.payment_mode }}
-                               
-                                {% endif %}
-                            </td>
+                            <td>{{ txn.id if txn.id else mdash }}</td>
+                            <td>{{ txn.payment_mode if txn.payment_mode else mdash }}</td>
                             <td>
                                 {% if txn.bill_amount is not none %}
-                                    &#8377; {{ "%.2f"|format(txn.bill_amount) }}
-                                
-                                 
+                                &#8377; {{ "%.2f"|format(txn.bill_amount) }}
+                                {% else %}
+                                &mdash;
                                 {% endif %}
                             </td>
-                            <td>
-                                {% if txn.amount_paid!=0%}
-                                
-                                &#8377;   {{ "%.2f"|format(txn.amount_paid) }}</td>
-                                {% endif %}
+                            <td>&#8377; {{ "%.2f"|format(txn.amount_paid) }}</td>
                             <td>&#8377; {{ "%.2f"|format(txn.pending_amount) }}</td>
                             <td>
                                 {% if txn.payment_date %}
-                                    {{ txn.payment_date | format_datetime('%d-%m-%Y') }}
-                               
+                                {{ txn.payment_date | format_datetime('%d-%m-%Y') }}
+                                {% else %}
+                                &mdash;
                                 {% endif %}
                             </td>
                             <td>{{ txn.delayed_days }}</td>
                             <td class="text-danger">&#8377; {{ "%.2f"|format(txn.penalty) }}</td>
-                  
-                       <td>
-                        <button type="button" class="btn btn-outline-primary">Edit</button>
-
-                       </td>
+                            <td class="text-center">
+                                {% if txn.id %}
+                                <button type="button" class="btn btn-sm btn-outline-primary edit-transaction-btn"
+                                    data-bs-toggle="modal" data-bs-target="#editTransactionModal" data-id="{{ txn.id }}"
+                                    data-bill-id="{{ txn.bill_id }}" data-payment-mode="{{ txn.payment_mode or '' }}"
+                                    data-amount="{{ '%.2f'|format(txn.amount_paid) }}"
+                                    data-payment-date="{% if txn.payment_date %}{{ txn.payment_date | format_datetime('%Y-%m-%d') }}{% endif %}"
+                                    data-description="{{ txn.description or '' }}"
+                                    data-bank-transaction-id="{{ txn.transaction_id }}">
+                                    Edit
+                                </button>
+                                {% else %}
+                                <span class="text-muted">&mdash;</span>
+                                {% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -188,4 +186,129 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="editTransactionModal" tabindex="-1" aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" action="/transaction" id="editTransactionForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Transaction</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="transactionIdInput">
+
+                    <input type="hidden" name="bill_id" id="billIdInput">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="bankTransactionIdInput" class="form-label">Bank Transaction ID</label>
+                            <input type="text" class="form-control" id="bankTransactionIdInput"
+                                name="bank_transaction_id" placeholder="Enter bank transaction ID">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="paymentModeInput" class="form-label">Payment Mode</label>
+                            <select class="form-select" id="paymentModeInput" name="payment_mode">
+                                <option value="">Select payment mode</option>
+                                <option value="CREDIT_CARD">Credit Card</option>
+                                <option value="DEBIT_CARD">Debit Card</option>
+                                <option value="NET_BANKING">Net Banking</option>
+                                <option value="UPI">UPI</option>
+                                <option value="CASH">Cash</option>
+                                <option value="CHEQUE">Cheque</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="amountPaidInput" class="form-label">Amount Paid</label>
+                            <input type="number" min="0" step="0.01" class="form-control" id="amountPaidInput"
+                                name="amount_paid" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="paymentDateInput" class="form-label">Payment Date</label>
+                            <input type="date" class="form-control" id="paymentDateInput" name="payment_date" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="billId" class="form-label">Bill ID</label>
+                            <input type="text" class="form-control" id="billId" name="bill_id" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="descriptionInput" class="form-label">Description</label>
+                            <textarea class="form-control" id="descriptionInput" name="description" rows="3"
+                                placeholder="Add a note about this transaction"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="closeEditTransModalButton" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" id="saveTransactionButton" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.getElementById('editTransactionForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Stop the default form submission
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            const actionUrl = this.getAttribute('action');
+            console.log('Data:', data);
+            fetch(actionUrl, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json', // Or 'application/x-www-form-urlencoded'
+                    // Add any necessary headers, e.g., X-CSRF-TOKEN
+                },
+                body: JSON.stringify(data), // Send data as JSON
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    const closeEditTransModalButton = document.getElementById('closeEditTransModalButton');
+                    if (closeEditTransModalButton) {
+                        closeEditTransModalButton.click(); 
+                    }
+                    // Handle success (e.g., show a confirmation message)
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    // Handle errors
+                });
+        });
+
+    </script>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const editModalEl = document.getElementById('editTransactionModal');
+        if (!editModalEl) {
+            return;
+        }
+
+        editModalEl.addEventListener('show.bs.modal', function (event) {
+            const triggerButton = event.relatedTarget;
+            if (!triggerButton) {
+                return;
+            }
+
+            document.getElementById('transactionIdInput').value = triggerButton.getAttribute('data-id') || '';
+            document.getElementById('billIdInput').value = triggerButton.getAttribute('data-bill-id') || '';
+            document.getElementById('bankTransactionIdInput').value = triggerButton.getAttribute('data-bank-transaction') || '';
+            document.getElementById('paymentModeInput').value = triggerButton.getAttribute('data-payment-mode') || '';
+            document.getElementById('amountPaidInput').value = triggerButton.getAttribute('data-amount') || '';
+            document.getElementById('paymentDateInput').value = triggerButton.getAttribute('data-payment-date') || '';
+            document.getElementById('descriptionInput').value = triggerButton.getAttribute('data-description') || '';
+            document.getElementById('billId').value = triggerButton.getAttribute('data-bill-id') || '';
+
+        });
+
+    });
+
+</script>
+
+
 {% endblock %}

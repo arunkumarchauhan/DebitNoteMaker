@@ -41,7 +41,8 @@ def create_transaction(bill:Bill,roi:float):
     for transaction in bill.transactions:
         pending_amount=pending_amount - transaction.amount_paid  
         
-        new_row_df=create_transaction_entry(bill_id=bill.id,
+        new_row_df=create_transaction_entry(id=transaction.id,
+                               bill_id=bill.id,
                                roi=roi,
                                bank_transaction_id=transaction.bank_transaction_id,
                                payment_mode=transaction.payment_mode,
@@ -55,7 +56,9 @@ def create_transaction(bill:Bill,roi:float):
         isFirstTransaction=False
 
     if pending_amount>0:
-        new_row_df=create_transaction_entry(bill_id=bill.id,
+        new_row_df=create_transaction_entry(
+                                id=None,
+                                bill_id=bill.id,
                                 roi=roi,
                                 bank_transaction_id=None,
                                 payment_mode=None,
@@ -70,7 +73,9 @@ def create_transaction(bill:Bill,roi:float):
     return df
              
 
-def create_transaction_entry(bill_id:int,roi:float, bank_transaction_id:str|None,payment_mode:str|None,due_date:datetime, payment_date:datetime|None, bill_amount:float|None,  amount_paid:float,pending_amount:float,description:str):
+def create_transaction_entry(
+        id:int,
+        bill_id:int,roi:float, bank_transaction_id:str|None,payment_mode:str|None,due_date:datetime, payment_date:datetime|None, bill_amount:float|None,  amount_paid:float,pending_amount:float,description:str):
     delayed_days = (payment_date - due_date).days 
     if delayed_days < 0:
             delayed_days = 0
@@ -79,8 +84,9 @@ def create_transaction_entry(bill_id:int,roi:float, bank_transaction_id:str|None
         penalty=pending_amount*(roi/100)*(delayed_days/30)
         
     data = {
+            "id": id,    
             "bill_id": bill_id,
-            "transaction_id": bank_transaction_id,
+            "bank_transaction_id": bank_transaction_id,
             "payment_mode":payment_mode,
             "due_date": due_date,
             "payment_date": payment_date,
