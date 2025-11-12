@@ -13,3 +13,4 @@ def bill_list(request: Request,bill_number: int, db=Depends(get_db)):
     bill = bill_repo.get_bill_by_bill_number(bill_number=bill_number, db=db)
     
     return templates.TemplateResponse("bill/bill_summary.html", {"request": request, "bill": bill,"today":datetime.now()})
+
