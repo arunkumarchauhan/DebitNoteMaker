@@ -129,7 +129,9 @@
                             <th scope="col">Payment Date</th>
                             <th scope="col">Delayed Days</th>
                             <th scope="col">Penalty</th>
-                            <th scope="col">Description</th>
+                            <th scope="col">Edit</th>
+
+                      
                         </tr>
                     </thead>
                     <tbody>
@@ -170,12 +172,11 @@
                             </td>
                             <td>{{ txn.delayed_days }}</td>
                             <td class="text-danger">&#8377; {{ "%.2f"|format(txn.penalty) }}</td>
-                            <td>
-                                {% if txn.description %}
-                                    {{ txn.description }}
-                               
-                                {% endif %}
-                            </td>
+                  
+                       <td>
+                        <button type="button" class="btn btn-outline-primary">Edit</button>
+
+                       </td>
                         </tr>
                         {% endfor %}
                     </tbody>
