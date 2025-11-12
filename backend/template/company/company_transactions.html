@@ -133,8 +133,9 @@
                     <thead class="table-light">
                         <tr>
                             <th scope="col">Bill ID</th>
+                            <th scope="col">Bill Date</th>
                             <th scope="col">Transaction ID</th>
-                            <th scope="col">Payment Mode</th>
+                            <!-- <th scope="col">Payment Mode</th> -->
                             <th scope="col">Bill Amount</th>
                             <th scope="col">Amount Paid</th>
                             <th scope="col">Pending Amount</th>
@@ -149,8 +150,16 @@
                         {% for txn in transactions %}
                         <tr>
                             <td>{{ txn.bill_id }}</td>
+
+                            <td>
+                                {% if txn.bill_date %}
+                                {{ txn.bill_date  | format_datetime('%d-%m-%Y')}}
+                                {% else %}
+                                &mdash;
+                                {% endif %}
+                            </td>
                             <td>{{ txn.id if txn.id else mdash }}</td>
-                            <td>{{ txn.payment_mode if txn.payment_mode else mdash }}</td>
+                            <!-- <td>{{ txn.payment_mode if txn.payment_mode else mdash }}</td> -->
                             <td>
                                 {% if txn.bill_amount is not none %}
                                 &#8377; {{ "%.2f"|format(txn.bill_amount) }}

@@ -46,6 +46,7 @@ def create_transaction(bill:Bill,roi:float):
                                roi=roi,
                                bank_transaction_id=transaction.bank_transaction_id,
                                payment_mode=transaction.payment_mode,
+                               bill_date=bill.bill_date,
                                due_date=bill.due_date,
                                 payment_date=transaction.payment_date,
                                 bill_amount=bill.amount if isFirstTransaction else None, 
@@ -62,6 +63,7 @@ def create_transaction(bill:Bill,roi:float):
                                 roi=roi,
                                 bank_transaction_id=None,
                                 payment_mode=None,
+                                bill_date=bill.bill_date,
                                 due_date=bill.due_date,
                                 payment_date=datetime.now(),
                                 bill_amount=bill.amount if pending_amount== bill.amount else None,
@@ -75,7 +77,7 @@ def create_transaction(bill:Bill,roi:float):
 
 def create_transaction_entry(
         id:int,
-        bill_id:int,roi:float, bank_transaction_id:str|None,payment_mode:str|None,due_date:datetime, payment_date:datetime|None, bill_amount:float|None,  amount_paid:float,pending_amount:float,description:str):
+        bill_id:int,roi:float, bank_transaction_id:str|None,payment_mode:str|None,    bill_date:datetime|None,due_date:datetime, payment_date:datetime|None, bill_amount:float|None,  amount_paid:float,pending_amount:float,description:str):
     delayed_days = (payment_date - due_date).days 
     if delayed_days < 0:
             delayed_days = 0
@@ -88,6 +90,7 @@ def create_transaction_entry(
             "bill_id": bill_id,
             "bank_transaction_id": bank_transaction_id,
             "payment_mode":payment_mode,
+            "bill_date":bill_date,
             "due_date": due_date,
             "payment_date": payment_date,
             "bill_amount":  bill_amount,
