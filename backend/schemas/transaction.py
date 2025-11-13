@@ -1,6 +1,6 @@
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, model_validator,field_validator
 from datetime import datetime
 from enum import Enum
 
@@ -18,7 +18,8 @@ class CreateTransaction(BaseModel):
     amount_paid : float
     description: str| None = None
     payment_date: datetime
-    bill_id: int
+    bill_id: int | None = None
+    
 
 class UpdateTransaction(BaseModel):
     id: int
@@ -28,6 +29,14 @@ class UpdateTransaction(BaseModel):
     description: str| None = None
     payment_date: datetime | None = None
     bill_id: int | None = None
+    bill_number: int | None = None
+    @model_validator(mode='before')
+    @classmethod
+    def check_either_field_bill_id_or_bill_number(cls, data: Any):
+        print("Bill  Data" , data)
+        if not data.get('bill_id')  and not data.get('bill_number') :
+            raise ValueError('Either bill_id or bill_number must be provided.')
+        return data
 
 class ShowTransaction(CreateTransaction):
     id: int

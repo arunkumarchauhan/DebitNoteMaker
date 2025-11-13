@@ -16,7 +16,7 @@ class BillUpdate(BaseModel):
     bill_number : int | None = None
     amount : float | None = None
     bill_date:datetime | None = None
-    company_id:int | None = None   
+    company_id:int | None = None    
     
 class BillShow(BillCreate):
     id:int

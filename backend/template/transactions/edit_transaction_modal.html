@@ -39,8 +39,8 @@
                             <input type="date" class="form-control" id="paymentDateInput" name="payment_date" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="billId" class="form-label">Bill ID</label>
-                            <input type="text" class="form-control" id="billId" name="bill_id" required>
+                            <label for="billNo" class="form-label">Bill No.</label>
+                            <input type="text" class="form-control" id="billNo" name="bill_number" required>
                         </div>
                         <div class="col-12">
                             <label for="descriptionInput" class="form-label">Description</label>
@@ -72,16 +72,17 @@
                 }
     
                 document.getElementById('transactionIdInput').value = triggerButton.getAttribute('data-id') || '';
-              
+      
                 document.getElementById('billIdInput').value = triggerButton.getAttribute('data-bill-id') || '';
+    
                 document.getElementById('bankTransactionIdInput').value = triggerButton.getAttribute('data-bank-transaction') || '';
                 document.getElementById('paymentModeInput').value = triggerButton.getAttribute('data-payment-mode') || '';
                 document.getElementById('amountPaidInput').value = triggerButton.getAttribute('data-amount') || '';
                 document.getElementById('paymentDateInput').value = triggerButton.getAttribute('data-payment-date') || '';
                 document.getElementById('descriptionInput').value = triggerButton.getAttribute('data-description') || '';
-                document.getElementById('billId').value = triggerButton.getAttribute('data-bill-id') || '';
-                var modalTitle= document.querySelector('.modal-title');
+                document.getElementById('billNo').value = triggerButton.getAttribute('data-bill-number') || '';
                  const transactionId = triggerButton.getAttribute('data-id');
+                 var modalTitle= document.querySelector('.modal-title');
                  modalTitle.textContent = transactionId ? `Edit Transaction ${transactionId}` : 'Add Transaction';
             });
     
@@ -97,9 +98,20 @@
             const formData = new FormData(this);
             const data = Object.fromEntries(formData.entries());
             const actionUrl = this.getAttribute('action');
+      
+          
+            const requestMethod= data.id == null || data.id === "" ? "POST" : 'PATCH';
+         if (requestMethod === 'PATCH') {
+                // For PATCH, modify the action URL to include the transaction ID
+               delete data.bill_id;
+            } 
+            else {
+                data.bill_id= parseInt( data.bill_id,null);
+            }
+          
             console.log('Data:', data);
             fetch(actionUrl, {
-                method: data.id == null || data.id === "" ? "POST" : 'PATCH',
+                method: requestMethod,
                 headers: {
                     'Content-Type': 'application/json', // Or 'application/x-www-form-urlencoded'
                     // Add any necessary headers, e.g., X-CSRF-TOKEN
@@ -113,7 +125,7 @@
                     if (closeEditTransModalButton) {
                         closeEditTransModalButton.click();
                     }
-                    window.location.reload();
+                 //   window.location.reload();
                     // Handle success (e.g., show a confirmation message)
                 })
                 .catch((error) => {
