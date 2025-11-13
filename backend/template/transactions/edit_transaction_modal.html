@@ -177,7 +177,7 @@ set modal_transactions = transaction_list %} {% endif %}
         const actionUrl = this.getAttribute("action");
     
         const billNumberFromInput = (data.bill_number || "").trim();
-        if (billNumberFromInput && (!data.bill_id || data.bill_id === "")) {
+        if (billNumberFromInput) {
           const matchingTransaction = modalTransactionsForLookup.find(
             (txn) => String(txn.bill_number) === billNumberFromInput
           );
