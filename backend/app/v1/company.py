@@ -23,8 +23,10 @@ def company_detail(request: Request,company_id:int, db=Depends(get_db)):
         BillShow.model_validate(bill).model_dump()
         for bill in company.bills
     ]
-    
-    context = {"request": request,"company":company,"bills":company.bills}
+
+    bills = sorted(bills, key=lambda bill: bill['bill_date'] or datetime.min)
+
+    context = {"request": request,"company":company,"bills":bills}
     return templates.TemplateResponse("company/company_detail.html",context)
 
 def create_transactions_for_company(company:Company,roi:float):
