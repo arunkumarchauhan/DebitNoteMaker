@@ -175,7 +175,6 @@ set modal_transactions = transaction_list %} {% endif %}
         const formData = new FormData(this);
         const data = Object.fromEntries(formData.entries());
         const actionUrl = this.getAttribute("action");
-        console.log(modalTransactionsForLookup);
     
         const billNumberFromInput = (data.bill_number || "").trim();
         if (billNumberFromInput && (!data.bill_id || data.bill_id === "")) {
@@ -194,7 +193,7 @@ set modal_transactions = transaction_list %} {% endif %}
           delete data.bill_id;
 
         } else {
-          data.bill_id = parseInt(data.bill_id, 10);
+          data.bill_id = parseInt(data.bill_id);
         }
 
         console.log("Data:", data);
