@@ -1,138 +1,227 @@
-<div class="modal fade" id="editTransactionModal" tabindex="-1" aria-hidden="true">
+{% set modal_transactions = [] %} {% if transactions is defined %} {% set
+modal_transactions = transactions %} {% elif transaction_list is defined %} {%
+set modal_transactions = transaction_list %} {% endif %}
 
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <form method="POST" action="/transaction" id="editTransactionForm">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add/Edit Transaction </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="id" id="transactionIdInput">
-
-                    <input type="hidden" name="bill_id" id="billIdInput">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="bankTransactionIdInput" class="form-label">Bank Transaction ID</label>
-                            <input type="text" class="form-control" id="bankTransactionIdInput"
-                                name="bank_transaction_id" placeholder="Enter bank transaction ID">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="paymentModeInput" class="form-label">Payment Mode</label>
-                            <select class="form-select" id="paymentModeInput" name="payment_mode">
-                                <option value="">Select payment mode</option>
-                                <option value="CREDIT_CARD">Credit Card</option>
-                                <option value="DEBIT_CARD">Debit Card</option>
-                                <option value="NET_BANKING">Net Banking</option>
-                                <option value="UPI">UPI</option>
-                                <option value="CASH">Cash</option>
-                                <option value="CHEQUE">Cheque</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="amountPaidInput" class="form-label">Amount Paid</label>
-                            <input type="number" min="0" step="0.01" class="form-control" id="amountPaidInput"
-                                name="amount_paid" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="paymentDateInput" class="form-label">Payment Date</label>
-                            <input type="date" class="form-control" id="paymentDateInput" name="payment_date" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="billNo" class="form-label">Bill No.</label>
-                            <input type="text" class="form-control" id="billNo" name="bill_number" required>
-                        </div>
-                        <div class="col-12">
-                            <label for="descriptionInput" class="form-label">Description</label>
-                            <textarea class="form-control" id="descriptionInput" name="description" rows="3"
-                                placeholder="Add a note about this transaction"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="closeEditTransModalButton" class="btn btn-outline-secondary"
-                        data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" id="saveTransactionButton" class="btn btn-primary">Save</button>
-                </div>
-            </form>
+<div
+  class="modal fade"
+  id="editTransactionModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <form method="POST" action="/transaction" id="editTransactionForm">
+        <div class="modal-header">
+          <h5 class="modal-title">Add/Edit Transaction</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
-    </div>
+        <div class="modal-body">
+          <input type="hidden" name="id" id="transactionIdInput" />
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const editModalEl = document.getElementById('editTransactionModal');
-            if (!editModalEl) {
+          <input type="hidden" name="bill_id" id="billIdInput" />
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="bankTransactionIdInput" class="form-label"
+                >Bank Transaction ID</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="bankTransactionIdInput"
+                name="bank_transaction_id"
+                placeholder="Enter bank transaction ID"
+              />
+            </div>
+            <div class="col-md-6">
+              <label for="paymentModeInput" class="form-label"
+                >Payment Mode</label
+              >
+              <select
+                class="form-select"
+                id="paymentModeInput"
+                name="payment_mode"
+              >
+                <option value="">Select payment mode</option>
+                <option value="CREDIT_CARD">Credit Card</option>
+                <option value="DEBIT_CARD">Debit Card</option>
+                <option value="NET_BANKING">Net Banking</option>
+                <option value="UPI">UPI</option>
+                <option value="CASH">Cash</option>
+                <option value="CHEQUE">Cheque</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="amountPaidInput" class="form-label"
+                >Amount Paid</label
+              >
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                class="form-control"
+                id="amountPaidInput"
+                name="amount_paid"
+                required
+              />
+            </div>
+            <div class="col-md-6">
+              <label for="paymentDateInput" class="form-label"
+                >Payment Date</label
+              >
+              <input
+                type="date"
+                class="form-control"
+                id="paymentDateInput"
+                name="payment_date"
+                required
+              />
+            </div>
+            <div class="col-md-6">
+              <label for="billNo" class="form-label">Bill No.</label>
+              <input
+                type="text"
+                class="form-control"
+                id="billNo"
+                name="bill_number"
+                required
+              />
+            </div>
+            <div class="col-12">
+              <label for="descriptionInput" class="form-label"
+                >Description</label
+              >
+              <textarea
+                class="form-control"
+                id="descriptionInput"
+                name="description"
+                rows="3"
+                placeholder="Add a note about this transaction"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            id="closeEditTransModalButton"
+            class="btn btn-outline-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            id="saveTransactionButton"
+            class="btn btn-primary"
+          >
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const modalTransactionsForLookup = [
+        {% for txn in modal_transactions if txn.bill_number is defined and txn.bill_id is defined and txn.bill_number is not none and txn.bill_id is not none %}
+        { bill_number: "{{ txn.bill_number }}", bill_id: {{ txn.bill_id }} }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+    document.addEventListener('DOMContentLoaded', function () {
+        const editModalEl = document.getElementById('editTransactionModal');
+        if (!editModalEl) {
+            return;
+        }
+
+        editModalEl.addEventListener('show.bs.modal', function (event) {
+            const triggerButton = event.relatedTarget;
+            if (!triggerButton) {
                 return;
             }
-    
-            editModalEl.addEventListener('show.bs.modal', function (event) {
-                const triggerButton = event.relatedTarget;
-                if (!triggerButton) {
-                    return;
-                }
-    
-                document.getElementById('transactionIdInput').value = triggerButton.getAttribute('data-id') || '';
-      
-                document.getElementById('billIdInput').value = triggerButton.getAttribute('data-bill-id') || '';
-    
-                document.getElementById('bankTransactionIdInput').value = triggerButton.getAttribute('data-bank-transaction') || '';
-                document.getElementById('paymentModeInput').value = triggerButton.getAttribute('data-payment-mode') || '';
-                document.getElementById('amountPaidInput').value = triggerButton.getAttribute('data-amount') || '';
-                document.getElementById('paymentDateInput').value = triggerButton.getAttribute('data-payment-date') || '';
-                document.getElementById('descriptionInput').value = triggerButton.getAttribute('data-description') || '';
-                document.getElementById('billNo').value = triggerButton.getAttribute('data-bill-number') || '';
-                 const transactionId = triggerButton.getAttribute('data-id');
-                 var modalTitle= document.querySelector('.modal-title');
-                 modalTitle.textContent = transactionId ? `Edit Transaction ${transactionId}` : 'Add Transaction';
-            });
-    
+
+            document.getElementById('transactionIdInput').value = triggerButton.getAttribute('data-id') || '';
+
+            document.getElementById('billIdInput').value = triggerButton.getAttribute('data-bill-id') || '';
+
+            document.getElementById('bankTransactionIdInput').value = triggerButton.getAttribute('data-bank-transaction') || '';
+            document.getElementById('paymentModeInput').value = triggerButton.getAttribute('data-payment-mode') || '';
+            document.getElementById('amountPaidInput').value = triggerButton.getAttribute('data-amount') || '';
+            document.getElementById('paymentDateInput').value = triggerButton.getAttribute('data-payment-date') || '';
+            document.getElementById('descriptionInput').value = triggerButton.getAttribute('data-description') || '';
+            document.getElementById('billNo').value = triggerButton.getAttribute('data-bill-number') || '';
+             const transactionId = triggerButton.getAttribute('data-id');
+             var modalTitle= document.querySelector('.modal-title');
+             modalTitle.textContent = transactionId ? `Edit Transaction ${transactionId}` : 'Add Transaction';
+             if(transactionId){
+                document.getElementById('billNo').setAttribute('readonly', 'readonly');
+             } else {
+                document.getElementById('billNo').removeAttribute('readonly');
+             }
         });
+
+    });
+  </script>
+  <script>
+    document
+      .getElementById("editTransactionForm")
+      .addEventListener("submit", function (e) {
+        e.preventDefault(); // Stop the default form submission
+
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+        const actionUrl = this.getAttribute("action");
+        console.log(modalTransactionsForLookup);
     
-    </script>
-    <script>
+        const billNumberFromInput = (data.bill_number || "").trim();
+        if (billNumberFromInput && (!data.bill_id || data.bill_id === "")) {
+          const matchingTransaction = modalTransactionsForLookup.find(
+            (txn) => String(txn.bill_number) === billNumberFromInput
+          );
+          if (matchingTransaction && matchingTransaction.bill_id) {
+            data.bill_id = matchingTransaction.bill_id;
+          }
+        }
 
+        const requestMethod =
+          data.id == null || data.id === "" ? "POST" : "PATCH";
+        if (requestMethod === "PATCH") {
+          // For PATCH, modify the action URL to include the transaction ID
+          delete data.bill_id;
 
-        document.getElementById('editTransactionForm').addEventListener('submit', function (e) {
-            e.preventDefault(); // Stop the default form submission
+        } else {
+          data.bill_id = parseInt(data.bill_id, 10);
+        }
 
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData.entries());
-            const actionUrl = this.getAttribute('action');
-      
-          
-            const requestMethod= data.id == null || data.id === "" ? "POST" : 'PATCH';
-         if (requestMethod === 'PATCH') {
-                // For PATCH, modify the action URL to include the transaction ID
-               delete data.bill_id;
-            } 
-            else {
-                data.bill_id= parseInt( data.bill_id,null);
+        console.log("Data:", data);
+        fetch(actionUrl, {
+          method: requestMethod,
+          headers: {
+            "Content-Type": "application/json", // Or 'application/x-www-form-urlencoded'
+            // Add any necessary headers, e.g., X-CSRF-TOKEN
+          },
+          body: JSON.stringify(data), // Send data as JSON
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
+            const closeEditTransModalButton = document.getElementById(
+              "closeEditTransModalButton"
+            );
+            if (closeEditTransModalButton) {
+              closeEditTransModalButton.click();
             }
-          
-            console.log('Data:', data);
-            fetch(actionUrl, {
-                method: requestMethod,
-                headers: {
-                    'Content-Type': 'application/json', // Or 'application/x-www-form-urlencoded'
-                    // Add any necessary headers, e.g., X-CSRF-TOKEN
-                },
-                body: JSON.stringify(data), // Send data as JSON
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Success:', data);
-                    const closeEditTransModalButton = document.getElementById('closeEditTransModalButton');
-                    if (closeEditTransModalButton) {
-                        closeEditTransModalButton.click();
-                    }
-                 //   window.location.reload();
-                    // Handle success (e.g., show a confirmation message)
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    // Handle errors
-                });
-        });
-
-    </script>
+           window.location.reload();
+            // Handle success (e.g., show a confirmation message)
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            // Handle errors
+          });
+      });
+  </script>
 </div>
