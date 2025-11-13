@@ -79,8 +79,14 @@
 
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Transactions</h5>
-            <span class="badge text-bg-secondary">{{ transaction_list|length }}</span>
+            <h5 class="mb-0">Transactions
+                <span class="badge text-bg-secondary ml-2">{{ transaction_list|length }}</span>
+            </h5>
+            <button type="button" class="btn btn-sm btn-outline-primary edit-transaction-btn" data-bs-toggle="modal"
+            data-bs-target="#editTransactionModal"
+              data-bill-id="{{ bill.id }}"
+            >
+            <i class="bi bi-plus-square"></i>
         </div>
         <div class="card-body">
             {% if transaction_list %}
@@ -96,6 +102,7 @@
                             <th scope="col">Description</th>
                             <th scope="col">Pending Amount</th>
                             <th scope="col">Penalty Amount (2%P.M.)</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -133,6 +140,19 @@
                                 {% set penalty=  transaction.amount_paid*0.02*delayed_days/30%}
                                 {% set ns.penalty=ns.penalty+penalty %}
                                 {{penalty}}
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-outline-primary btn-sm edit-transaction-btn"
+                                    data-bs-toggle="modal" data-bs-target="#editTransactionModal"
+                                    data-id="{{ transaction.id }}"
+                                    data-bill-id="{{ bill.id }}"
+                                    data-bank-transaction="{{ transaction.bank_transaction_id }}"
+                                    data-payment-mode="{{ transaction.payment_mode }}"
+                                    data-amount="{{ transaction.amount_paid }}"
+                                    data-payment-date="{{ transaction.payment_date | format_datetime('%Y-%m-%d') if transaction.payment_date else '' }}"
+                                    data-description="{{ transaction.description }}">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
                             </td>
                         </tr>
                     
@@ -177,5 +197,19 @@
             {% endif %}
         </div>
     </div>
+    {% include 'transactions/edit_transaction_modal.html' %}
+    <script>
+        $(document).ready(function() {
+            $('.edit-transaction-btn').on('click', function() {
+             
+              console.log("clicked");
+               
+               var bill=$('#billId');
+               var parentDiv = bill.closest('div'); 
+               parentDiv.hide();
+              // $('label[for=billId]').hide();
+            });
+        });
+    </script>
 </div>
 {% endblock %}

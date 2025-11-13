@@ -1,29 +1,29 @@
 {% extends "base.html" %}
 
 {% block title %}
-  <title>Debit Note Maker</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src=
-  "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js">
-      </script>
-  <script>
-    $(document).ready(function(){
+<title>Debit Note Maker</title>
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js">
+</script>
+<script>
+    $(document).ready(function () {
         $('.datepicker').hide();
         $('.datepicker').datepicker({
             format: 'dd/mm/yyyy',
             autoclose: true
         });
-        $('#dateSwitch').on('click', function() {
+        $('#dateSwitch').on('click', function () {
             if ($('.datepicker').is(':visible')) {
-            $('.datepicker').hide(); // Hide the component
-    } else {
-      $('.datepicker').show(); // Show the component
-    }
-       
-  });
+                $('.datepicker').hide(); // Hide the component
+            } else {
+                $('.datepicker').show(); // Show the component
+            }
+
+        });
     });
-    
+
 </script>
 {% endblock %}
 {% block content %}
@@ -34,10 +34,35 @@
     <div class="col-12 col-lg-6 d-flex">
         {% include 'components/bill_filter_card.html' %}
     </div>
-   
-   
+
+
 
 </div>
-{% include 'components/bill_list_table.html' %}
+<div class="col-lg-12">
+<div class="card h-100">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Bills
+            <span class="badge text-bg-secondary ml-2">{{ bills|length }}</span>
+
+        </h5>
+        <div>
+
+            <button type="button" class="btn btn-sm btn-outline-primary edit-transaction-btn" data-bs-toggle="modal"
+                data-bs-target="#editTransactionModal">
+                <i class="bi bi-plus-square"></i>
+            </button>
+
+            <a class="btn btn-outline-primary btn-sm" href="/party/{{ company.id}}/transactions" role="button"
+                aria-disabled="true">
+                <i class="bi bi-arrows-angle-expand"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        {% include 'components/bill_list_table.html' %}
+     </div>
+
+</div>
+</div>
 
 {% endblock %}

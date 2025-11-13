@@ -9,11 +9,7 @@
                 <th>Bill Amount</th>
                 <th>Transactions 
              
-                    <a  class="btn btn-outline-secondary btn-sm" href="/party/{{ company.id}}/transactions" role="button" aria-disabled="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-circle" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.854 10.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
-                          </svg>
-                    </a>
+                
                 </th>
             </tr>
         </thead>
@@ -26,13 +22,52 @@
                 <td>{{ bill.due_date | format_datetime('%d-%m-%Y') }}</td>
                 <td>{{ bill.amount }}</td>
           
-                <td><a href="bill/{{bill.bill_number}}" class="btn btn-outline-primary btn-sm" role="button" aria-disabled="true">View</a>
+                <td><a href="bill/{{bill.bill_number}}" class="btn btn-outline-primary btn-sm" role="button" aria-disabled="true">
+                    <i class="bi bi-list"></i>
+                </a>
+                <button  
+                 onclick="deleteBill('{{ bill.id }}', '{{ bill.bill_number }}')"
+                class="btn btn-outline-primary btn-sm" role="button" aria-disabled="true">
+                <i class="bi bi-trash"></i>
+            </button>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <script>
+        function deleteBill(billId,billNumber) {
+          
+            if (confirm('Are you sure you want to delete bill ' + billNumber + '?')) {
+                // Perform deletion logic here, e.g., send a request to the server
+                console.log('Bill ' + billNumber + ' deleted.');
+
+                const actionUrl = '/bill/' +billId;
+
+                fetch(actionUrl, {
+                    method: "DELETE",
+                    headers: {
+                        'Content-Type': 'application/json', // Or 'application/x-www-form-urlencoded'
+                        // Add any necessary headers, e.g., X-CSRF-TOKEN
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        alert("Transaction deleted successfully.");
+                        window.location.reload();
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        // Handle errors
+                    });
+            }
+        
+        }
+    </script>
     {% else %}
     <p>No bills available.</p>
-   {% endif %}
+ 
+     {% endif %}
 </div>
