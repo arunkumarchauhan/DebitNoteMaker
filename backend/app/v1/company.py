@@ -122,7 +122,7 @@ def bills_by_company_id(request: Request,company_id:int, db=Depends(get_db)):
      }}
     return context
 
-@router.get("/company-transaction/{company_id}")
+@router.get("/party/{company_id}/transactions")
 def company_transaction(request: Request,company_id:int, db=Depends(get_db)):
     company =company_api.get_company(id=company_id, db=db)
     transactions_df=create_transactions_for_company(company=company,roi=2)
