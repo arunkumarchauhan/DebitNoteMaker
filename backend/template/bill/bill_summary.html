@@ -112,7 +112,7 @@
                         {% for transaction in transaction_list %}
                         {% set ns.pending_amount=ns.pending_amount-transaction.amount_paid %}
                         <tr>
-                            <td>{{ transaction.bank_transaction_id or "—" }}</td>
+                            <td>{{ transaction.id or "—" }}</td>
                             <td>{{ transaction.payment_mode }}</td>
                             <td>&#8377; {{ "%.2f"|format(transaction.amount_paid) }}</td>
                             <td>

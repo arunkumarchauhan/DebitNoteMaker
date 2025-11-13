@@ -33,6 +33,7 @@ def create_transaction(bill:Bill,roi:float):
         
         new_row_df=create_transaction_entry(id=transaction.id,
                                bill_id=bill.id,
+                               bill_number=bill.bill_number,
                                roi=roi,
                                bank_transaction_id=transaction.bank_transaction_id,
                                payment_mode=transaction.payment_mode,
@@ -50,6 +51,7 @@ def create_transaction(bill:Bill,roi:float):
         new_row_df=create_transaction_entry(
                                 id=None,
                                 bill_id=bill.id,
+                                bill_number=bill.bill_number,
                                 roi=roi,
                                 bank_transaction_id=None,
                                 payment_mode=None,
@@ -67,7 +69,7 @@ def create_transaction(bill:Bill,roi:float):
 
 def create_transaction_entry(
         id:int,
-        bill_id:int,roi:float, bank_transaction_id:str|None,payment_mode:str|None,    bill_date:datetime|None,due_date:datetime, payment_date:datetime|None, bill_amount:float|None,  amount_paid:float,pending_amount:float,description:str):
+        bill_id:int,bill_number:int,roi:float, bank_transaction_id:str|None,payment_mode:str|None,    bill_date:datetime|None,due_date:datetime, payment_date:datetime|None, bill_amount:float|None,  amount_paid:float,pending_amount:float,description:str):
     delayed_days = (payment_date - due_date).days 
     if delayed_days < 0:
             delayed_days = 0
@@ -78,6 +80,7 @@ def create_transaction_entry(
     data = {
             "id": id,    
             "bill_id": bill_id,
+            "bill_number": bill_number,
             "bank_transaction_id": bank_transaction_id,
             "payment_mode":payment_mode,
             "bill_date":bill_date,

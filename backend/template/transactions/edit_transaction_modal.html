@@ -4,7 +4,7 @@
         <div class="modal-content">
             <form method="POST" action="/transaction" id="editTransactionForm">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add/Edit Transaction</h5>
+                    <h5 class="modal-title">Add/Edit Transaction </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -72,6 +72,7 @@
                 }
     
                 document.getElementById('transactionIdInput').value = triggerButton.getAttribute('data-id') || '';
+              
                 document.getElementById('billIdInput').value = triggerButton.getAttribute('data-bill-id') || '';
                 document.getElementById('bankTransactionIdInput').value = triggerButton.getAttribute('data-bank-transaction') || '';
                 document.getElementById('paymentModeInput').value = triggerButton.getAttribute('data-payment-mode') || '';
@@ -79,7 +80,9 @@
                 document.getElementById('paymentDateInput').value = triggerButton.getAttribute('data-payment-date') || '';
                 document.getElementById('descriptionInput').value = triggerButton.getAttribute('data-description') || '';
                 document.getElementById('billId').value = triggerButton.getAttribute('data-bill-id') || '';
-    
+                var modalTitle= document.querySelector('.modal-title');
+                 const transactionId = triggerButton.getAttribute('data-id');
+                 modalTitle.textContent = transactionId ? `Edit Transaction ${transactionId}` : 'Add Transaction';
             });
     
         });
