@@ -149,12 +149,22 @@ set modal_transactions = transaction_list %} {% endif %}
             document.getElementById('billIdInput').value = triggerButton.getAttribute('data-bill-id') || '';
 
             document.getElementById('bankTransactionIdInput').value = triggerButton.getAttribute('data-bank-transaction') || '';
-            document.getElementById('paymentModeInput').value = triggerButton.getAttribute('data-payment-mode') || '';
+           const paymentMode= triggerButton.getAttribute('data-payment-mode') || '';
+            document.getElementById('paymentModeInput').value =paymentMode;
+            if (paymentMode.trim() === ""){
+              document.getElementById("paymentModeInput").value = "CHEQUE";
+            }
             document.getElementById('amountPaidInput').value = triggerButton.getAttribute('data-amount') || '';
-            document.getElementById('paymentDateInput').value = triggerButton.getAttribute('data-payment-date') || '';
+            const paymentDate= triggerButton.getAttribute('data-payment-date') || '';
+            document.getElementById('paymentDateInput').value =paymentDate;
             document.getElementById('descriptionInput').value = triggerButton.getAttribute('data-description') || '';
             document.getElementById('billNo').value = triggerButton.getAttribute('data-bill-number') || '';
-             const transactionId = triggerButton.getAttribute('data-id');
+            
+            if(paymentDate.trim() === ""){
+              document.getElementById("paymentDateInput").value = new Date().toISOString().split("T")[0];
+            } 
+  
+            const transactionId = triggerButton.getAttribute('data-id');
              var modalTitle= document.querySelector('.modal-title');
              modalTitle.textContent = transactionId ? `Edit Transaction ${transactionId}` : 'Add Transaction';
              if(transactionId){
