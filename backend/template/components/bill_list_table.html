@@ -29,7 +29,7 @@
             data-id="{{ bill.id }}"
             data-bill-number="{{ bill.bill_number }}"
             data-amount="{{ bill.amount }}"
-            data-bill-date="{{ bill.bill_date }}"
+            data-bill-date="{{ bill.bill_date | format_datetime('%Y-%m-%d') }}"
           >
             <i class="bi bi-pencil-square"></i>
           </button>
