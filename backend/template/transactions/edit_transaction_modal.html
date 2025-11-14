@@ -165,6 +165,11 @@ set modal_transactions = transaction_list %} {% endif %}
         });
 
     });
+    document.addEventListener('hide.bs.modal', function (event) {
+      if (document.activeElement) {
+          document.activeElement.blur();
+      }
+  });
   </script>
   <script>
     document
