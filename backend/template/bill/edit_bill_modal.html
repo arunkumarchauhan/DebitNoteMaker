@@ -4,7 +4,6 @@
       <form method="POST" action="/bill" id="editBillForm">
         <div class="modal-header">
           <h5 class="modal-title">Add/Edit Bill</h5>
-       
         </div>
         <div class="modal-body">
           <input type="hidden" name="id" id="billIdInput" />
@@ -108,13 +107,14 @@
         const billNumber = triggerButton.getAttribute("data-bill-number");
         document.getElementById("billNumber").value = billNumber || "";
         document.getElementById("amount").value =
-        triggerButton.getAttribute("data-amount") || "";
-        const billDate= triggerButton.getAttribute("data-bill-date") || "";
-            document.getElementById("billDate").value =billDate;
-         console.log("billDate:", billDate);
-          if(billDate.trim() === ""){
-            document.getElementById("billDate").value = new Date().toISOString().split("T")[0];
-          } 
+          triggerButton.getAttribute("data-amount") || "";
+        const billDate = triggerButton.getAttribute("data-bill-date") || "";
+        document.getElementById("billDate").value = billDate;
+        if (billDate.trim() === "") {
+          document.getElementById("billDate").value = new Date()
+            .toISOString()
+            .split("T")[0];
+        }
 
         var modalTitle = document.querySelector(".modal-title");
         modalTitle.textContent = billId ? `Edit Bill ${billId}` : "Add Bill";
@@ -140,12 +140,11 @@
 
         const requestMethod =
           data.id == null || data.id === "" ? "POST" : "PATCH";
-        if (requestMethod === "PATCH") {
-          // For PATCH, modify the action URL to include the transaction ID
-          delete data.id;
-        } else {
+          if( data.id === ""){
+
           data.id = parseInt(data.id);
         }
+
 
         console.log("Data:", data);
         fetch(actionUrl, {
@@ -170,7 +169,7 @@
               }
             }
 
-               window.location.reload();
+            window.location.reload();
             // Handle success (e.g., show a confirmation message)
           })
           .catch((error) => {

@@ -18,7 +18,7 @@
             <p class="card-text">GST : {{ company.gst_number }}</p>
             <p class="card-text">Payment Term : {{ company.payment_term_days}} days</p>
             {% if company.address %}
-            <small class="card-text text-muted">Address : {{ company.address | truncate(50)}}</small>
+            <small class="card-text text-muted limit-text">Address : {{ company.address}}</small>
             {% endif %}
    
     </div>
