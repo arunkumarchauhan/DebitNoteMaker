@@ -1,26 +1,85 @@
 <div class="col-sm-4 mb-4">
-   
-    <div class="card">
-       <div class="card-header">
-        <h5 class="card-text">{{ company.name }}
-
-            <a href="party/{{company.id}}" class="float-end btn btn-outline-primary">  
-                <!-- <button type="button" class="btn btn-outline-primary">Edit</button> -->
-                <i class="bi bi-arrows-angle-expand"></i>
-                <!-- <i class="btn btn-outline-primary">Edit</i> -->
-            </a>
-        </h5>
-
-       </div>
-        <div class="card-body d-flex flex-column">
-            <p class="card-text">Email: {{ company.email}}</p>
-            <p class="card-text">Phone: {{ company.phone_number}}</p>
-            <p class="card-text">GST : {{ company.gst_number }}</p>
-            <p class="card-text">Payment Term : {{ company.payment_term_days}} days</p>
-            {% if company.address %}
-            <small class="card-text text-muted limit-text">Address : {{ company.address}}</small>
-            {% endif %}
-   
-    </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h5 class="card-text">{{ company.name }}</h5>
         </div>
+        <div class="col-md-6 text-end">
+          <a
+            type="button"
+            class="btn btn-outline-primary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#editCompanyModal"
+            data-id="{{ company.id }}"
+            data-name="{{ company.name }}"
+            data-phone-number="{{ company.phone_number }}"
+            data-email="{{ company.email }}"
+            data-address="{{ company.address }}"
+            data-gst-number="{{ company.gst_number }}"
+            data-payment-term-days="{{ company.payment_term_days }}"
+          >
+            <i class="bi bi-pencil-square"></i>
+          </a>
+        
+
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-primary btn-sm ms-2 me-2"
+            onclick="showDeleteCompanyConfirmation('{{ company.id }}','{{ company.name }}')"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
+          <a
+          href="party/{{company.id}}"
+          class="float-end btn btn-outline-primary btn-sm"
+        >
+          <i class="bi bi-arrows-angle-expand"></i>
+        </a>
+        </div>
+      </div>
+    </div>
+    <div class="card-body d-flex flex-column">
+      <p class="card-text">Email: {{ company.email}}</p>
+      <p class="card-text">Phone: {{ company.phone_number}}</p>
+      <p class="card-text">GST : {{ company.gst_number }}</p>
+      <p class="card-text">
+        Payment Term : {{ company.payment_term_days}} days
+      </p>
+      {% if company.address %}
+      <small class="card-text text-muted limit-text"
+        >Address : {{ company.address}}</small
+      >
+      {% endif %}
+    </div>
+  </div>
+  <script>
+    function showDeleteCompanyConfirmation(id, name) {
+      if (confirm(`Are you sure you want to delete copmany : ${name} ?`)) {
+        // User clicked "OK"
+        // alert("Item deleted!");
+
+        const actionUrl = "/company/" + id;
+
+        fetch(actionUrl, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json", // Or 'application/x-www-form-urlencoded'
+            // Add any necessary headers, e.g., X-CSRF-TOKEN
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
+            alert("Company deleted successfully.");
+            window.location.reload();
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            // Handle errors
+          });
+        // Here you would typically perform the action, e.g., submit a form or make an API call
+      }
+    }
+  </script>
 </div>

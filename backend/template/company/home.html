@@ -15,12 +15,21 @@
 {% endblock %}
 {% block content %}
 <div class="container center">
-  <h1 class="display-4 text-center mb-5">All Companies</h1>
+  <h1 class="display-4 text-center mb-5">All Companies
+    <button type="button" class="btn btn-outline-primary btn-sm edit-transaction-btn"
+    data-bs-toggle="modal" data-bs-target="#editCompanyModal"
+    >
+    <i class="bi bi-plus-square"></i>
+</button>
+
+  </h1>
   <div class="row justify-content-center">
     {% for company in companies %}
     {% include 'company/company_card.html' %}
     {% endfor %}
   </div>
+
 </div>
+{% include 'company/company_edit_modal.html' %}
 {% endblock %}
 
