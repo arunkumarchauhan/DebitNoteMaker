@@ -28,5 +28,3 @@ def company_detail(request: Request,company_id:int, db=Depends(get_db)):
     context = {"request": request,"company":company,"bills":bills}
     return templates.TemplateResponse("company/company_detail.html",context)
 
-
-

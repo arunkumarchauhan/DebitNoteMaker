@@ -8,6 +8,10 @@ from db.models.company import Company
 from db.models.bill import Bill
 from api.v1 import company_router as company_api
 from schemas.company import CompanyShow
+import pandas as pd
+from fastapi.responses import StreamingResponse
+from io import BytesIO
+
 router = APIRouter()
 
 
@@ -128,3 +132,31 @@ def company_transaction(request: Request,company_id:int, db=Depends(get_db)):
         "interest":2
      }}
     return templates.TemplateResponse("company/company_transactions.html",context)
+
+@router.get("/download_to_excel/{company_id}")
+def download_company_transaction_excel(request: Request,company_id:int, db=Depends(get_db)):
+    company =company_api.get_company(id=company_id, db=db)
+    transactions_df=create_transactions_for_company(company=company,roi=2)
+   
+    total_penalty=sum([tx["penalty"] for tx in transactions_df])
+    total_pending=sum([tx["pending_amount"] for tx in transactions_df])
+    
+    df = pd.DataFrame(transactions_df)
+    df_summary = pd.DataFrame([{
+        "Total Penalty": total_penalty,
+        "Total Pending Amount": total_pending,
+        "Total Amount": total_penalty + total_pending
+    }])
+    
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Transactions')
+        df_summary.to_excel(writer, index=False, sheet_name='Summary')
+        writer.close()
+    output.seek(0)
+    
+    headers = {
+        'Content-Disposition': f'attachment; filename="{company.name}_transactions.xlsx"'
+    }
+    
+    return StreamingResponse(output, media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', headers=headers)

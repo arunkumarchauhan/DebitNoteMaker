@@ -1,14 +1,9 @@
-{% extends "base.html" %}
- {% block title %}
+{% extends "base.html" %} {% block title %}
 <title>Company Transactions - {{ company.name }}</title>
 
-{% endblock %}
- {% block content %}
-{% set transactions = bill.transactions if
-bill and bill.transactions is defined else [] %} 
-{% set transaction_count =
-(transactions | selectattr('amount_paid', 'gt', 0) | list | length) %} 
-{% set
+{% endblock %} {% block content %} {% set transactions = bill.transactions if
+bill and bill.transactions is defined else [] %} {% set transaction_count =
+(transactions | selectattr('amount_paid', 'gt', 0) | list | length) %} {% set
 mdash = "&mdash;"|safe %}
 
 <div class="container py-4">
@@ -136,14 +131,21 @@ mdash = "&mdash;"|safe %}
           >{{ transaction_count }}</span
         >
       </h5>
-      <button
-        type="button"
-        class="btn btn-sm btn-outline-primary edit-transaction-btn"
-        data-bs-toggle="modal"
-        data-bs-target="#editTransactionModal"
-      >
-        <i class="bi bi-plus-square"></i>
-      </button>
+      <div>
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-primary edit-transaction-btn"
+          data-bs-toggle="modal"
+          data-bs-target="#editTransactionModal"
+        >
+          <i class="bi bi-plus-square"></i>
+        </button>
+        <a type="button" 
+        href="/party/download_to_excel/{{company.id}}"
+        class="btn btn-sm btn-outline-primary">
+          <i class="bi bi-download"></i>
+        </a>
+      </div>
     </div>
     <div class="card-body">
       {% if transactions %}
@@ -264,5 +266,7 @@ mdash = "&mdash;"|safe %}
       // Here you would typically perform the action, e.g., submit a form or make an API call
     }
   }
+
+
 </script>
 {% include 'transactions/edit_transaction_modal.html' %} {% endblock %}
